@@ -1,7 +1,5 @@
 #include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
+#include "CsvTable/CsvTable.h"
 
 int main(int argc, char **argv) {
     if (argc != 2) {
@@ -10,23 +8,18 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    std::ifstream inputFile(argv[1]);
-    if (inputFile.is_open()) {
-        std::string str;
-        std::vector<std::string> data;
+    CsvTableHandler::CsvTable csvTable;
 
-        while (std::getline(inputFile, str)) {
-            data.emplace_back(str);
-            str.clear();
-        }
+    try {
+        csvTable.readTable(argv[1]);
 
-        for (const std::string &row : data) {
-            std::cout << row << std::endl;
-        }
+        std::cout << csvTable.getElem("A", 2) << std::endl;
+        std::cout << csvTable.getElem("B", 2) << std::endl;
+        std::cout << csvTable.getElem("B", 30) << std::endl;
+        std::cout << csvTable.getElem("Cell", 30) << std::endl;
 
-        inputFile.close();
-    } else {
-        throw std::runtime_error("Failed to open input data file");
+    } catch (const std::exception &exception) {
+        std::cerr << exception.what() << std::endl;
     }
 
     return 0;
