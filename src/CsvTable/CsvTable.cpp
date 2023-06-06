@@ -21,6 +21,7 @@ void CsvTableHandler::CsvTable::readTable(const std::string &fileName) {
     } else {
         throw std::runtime_error("Failed to open input data file");
     }
+
 }
 
 void CsvTableHandler::CsvTable::readFirstString(std::ifstream &inputFile) {
@@ -69,9 +70,13 @@ void CsvTableHandler::CsvTable::readDataStrings(std::ifstream &inputFile) {
 }
 
 std::string CsvTableHandler::CsvTable::getElem(const std::string &column, const int &row) {
-    int rowIndex = rowHeaders_.at(row);
-    int columnIndex = columnHeaders_.at(column);
+    try {
+        int rowIndex = rowHeaders_.at(row);
+        int columnIndex = columnHeaders_.at(column);
 
-    return data_[rowIndex][columnIndex];
+        return data_[rowIndex][columnIndex];
+    } catch (const std::out_of_range &exception) {
+        return {};
+    }
 }
 

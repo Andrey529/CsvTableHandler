@@ -1,0 +1,3 @@
+[submodule "/home/andrey/Projects/ClionProjects/CsvTableHandler/tests/googletest"]
+	path = /home/andrey/Projects/ClionProjects/CsvTableHandler/tests/googletest
+	url = https://github.com/google/googletest.git
