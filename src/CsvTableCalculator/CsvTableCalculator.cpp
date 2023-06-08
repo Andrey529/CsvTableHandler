@@ -79,8 +79,23 @@ bool CsvTableHandler::CsvTableCalculator::calculate(CsvTableHandler::CsvTable &t
             result = firstOperandValue / secondOperandValue;
         }
 
+        int rowHeadValue = -1;
+        for (const auto &rowHead : rowHeaders) {
+            if (rowHead.second == rowIndex) {
+                rowHeadValue = rowHead.first;
+                break;
+            }
+        }
 
-        tableElements[rowIndex][columnIndex] = std::to_string(result);
+        std::string columnHeadValue;
+        for (const auto &columnHead : columnHeaders) {
+            if (columnHead.second == columnIndex) {
+                columnHeadValue = columnHead.first;
+                break;
+            }
+        }
+
+        table.setElem(columnHeadValue, rowHeadValue, std::to_string(result));
 
     }
 

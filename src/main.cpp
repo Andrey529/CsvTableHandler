@@ -1,5 +1,4 @@
 #include <iostream>
-#include "CsvTable/CsvTable.h"
 #include "CsvTableCalculator/CsvTableCalculator.h"
 
 int main(int argc, char **argv) {

@@ -109,9 +109,41 @@ std::ostream& CsvTableHandler::operator<<(std::ostream &ostream, const CsvTable 
     auto columnHeaders = table.getColumnHeaders();
     auto tableElements = table.getElementsInTable();
 
+    std::vector<std::pair<int, int>> rowHeadersInArray;
+    for (const auto& rowHead : rowHeaders) {
+        rowHeadersInArray.emplace_back(rowHead.first, rowHead.second);
+    }
+
+    auto rowHeadersComparator = [](const std::pair<int,int> &a, const std::pair<int,int> &b){
+        return a.second < b.second;
+    };
+
+    std::sort(rowHeadersInArray.begin(), rowHeadersInArray.end(), rowHeadersComparator);
+
+    std::vector<std::pair<std::string , int>> columnHeadersInArray;
+    for (const auto& columnHead : columnHeaders) {
+        columnHeadersInArray.emplace_back(columnHead.first, columnHead.second);
+    }
+
+    auto columnHeadersComparator = [](const std::pair<std::string,int> &a, const std::pair<std::string,int> &b){
+        return a.second < b.second;
+    };
+
+    std::sort(columnHeadersInArray.begin(), columnHeadersInArray.end(), columnHeadersComparator);
+
+
     ostream << ',';
-    for (const auto &columnHead : columnHeaders) {
-        ostream << columnHead.first;
+    for (int i = 0; i < columnHeadersInArray.size() - 1; ++i) {
+        ostream << columnHeadersInArray[i].first << ',';
+    }
+    ostream << columnHeadersInArray[columnHeadersInArray.size() - 1].first << '\n';
+
+    for (int i = 0; i < rowHeadersInArray.size(); ++i) {
+        ostream << rowHeadersInArray[i].first << ',';
+        for (int j = 0; j < columnHeadersInArray.size() - 1; ++j) {
+            ostream << tableElements[rowHeadersInArray[i].second][columnHeadersInArray[j].second] << ',';
+        }
+        ostream << tableElements[rowHeadersInArray[i].second][columnHeadersInArray[columnHeadersInArray.size() - 1].second] << '\n';
     }
 
     return ostream;
