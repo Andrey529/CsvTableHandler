@@ -1,5 +1,6 @@
 #include <iostream>
 #include "CsvTable/CsvTable.h"
+#include "CsvTableCalculator/CsvTableCalculator.h"
 
 int main(int argc, char **argv) {
     if (argc != 2) {
@@ -18,6 +19,9 @@ int main(int argc, char **argv) {
         std::cout << csvTable.getElem("B", 30) << std::endl;
         std::cout << csvTable.getElem("Cell", 30) << std::endl;
 
+        CsvTableHandler::CsvTableCalculator::calculate(csvTable);
+
+        std::cout << csvTable;
     } catch (const std::exception &exception) {
         std::cerr << exception.what() << std::endl;
     }

@@ -20,9 +20,16 @@ namespace CsvTableHandler {
         CsvTable();
         ~CsvTable();
         void readTable(const std::string &fileName);
-        std::string getElem(const std::string &column, const int &row);
+        std::string getElem(const std::string &column, const int &row) const;
+        bool setElem(const std::string &column, const int &row, const std::string &value);
+
+        std::unordered_map<std::string, int> getColumnHeaders() const;
+        std::unordered_map<int, int> getRowHeaders() const;
+        std::vector<std::vector<std::string>> getElementsInTable() const;
+
     };
 
+    std::ostream& operator<<(std::ostream &ostream, const CsvTable &table);
 } // namespace CsvTableHandler
 
 

@@ -2,13 +2,6 @@ project(Google_tests)
 
 set(GOOGLE_TESTS_DIR ${CMAKE_SOURCE_DIR}/tests/googletest)
 
-if(NOT EXISTS ${GOOGLE_TESTS_DIR})
-    find_package(Git REQUIRED)
-    execute_process(
-            COMMAND ${GIT_EXECUTABLE} clone https://github.com/google/googletest.git ${GOOGLE_TESTS_DIR}
-    )
-endif()
-
 if(NOT EXISTS ${GOOGLE_TESTS_DIR}/googletest)
     message(da)
     find_package(Git REQUIRED)

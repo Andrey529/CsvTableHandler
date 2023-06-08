@@ -69,7 +69,7 @@ void CsvTableHandler::CsvTable::readDataStrings(std::ifstream &inputFile) {
     }
 }
 
-std::string CsvTableHandler::CsvTable::getElem(const std::string &column, const int &row) {
+std::string CsvTableHandler::CsvTable::getElem(const std::string &column, const int &row) const {
     try {
         int rowIndex = rowHeaders_.at(row);
         int columnIndex = columnHeaders_.at(column);
@@ -80,3 +80,39 @@ std::string CsvTableHandler::CsvTable::getElem(const std::string &column, const 
     }
 }
 
+bool CsvTableHandler::CsvTable::setElem(const std::string &column, const int &row, const std::string &value) {
+    try {
+        int rowIndex = rowHeaders_.at(row);
+        int columnIndex = columnHeaders_.at(column);
+
+        data_[rowIndex][columnIndex] = value;
+        return true;
+    } catch (const std::out_of_range &exception) {
+        return false;
+    }
+}
+
+std::unordered_map<std::string, int> CsvTableHandler::CsvTable::getColumnHeaders() const {
+    return columnHeaders_;
+}
+
+std::unordered_map<int, int> CsvTableHandler::CsvTable::getRowHeaders() const {
+    return rowHeaders_;
+}
+
+std::vector<std::vector<std::string>> CsvTableHandler::CsvTable::getElementsInTable() const {
+    return data_;
+}
+
+std::ostream& CsvTableHandler::operator<<(std::ostream &ostream, const CsvTable &table) {
+    auto rowHeaders = table.getRowHeaders();
+    auto columnHeaders = table.getColumnHeaders();
+    auto tableElements = table.getElementsInTable();
+
+    ostream << ',';
+    for (const auto &columnHead : columnHeaders) {
+        ostream << columnHead.first;
+    }
+
+    return ostream;
+}
