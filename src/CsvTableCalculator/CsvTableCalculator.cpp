@@ -47,9 +47,6 @@ bool CsvTableHandler::CsvTableCalculator::calculate(CsvTableHandler::CsvTable &t
         std::string secondOperandColumn = parsedSecondOperand.first;
         int secondOperandRow = parsedSecondOperand.second;
 
-        std::cout << firstOperandColumn << ' ' << firstOperandRow << ' ' << mathOperator << ' '
-                  << secondOperandColumn << ' ' << secondOperandRow << '\n';
-
         int firstOperandValue, secondOperandValue;
 
         if (!firstOperandColumn.empty() && !secondOperandColumn.empty()) {
@@ -106,7 +103,7 @@ bool CsvTableHandler::CsvTableCalculator::calculate(CsvTableHandler::CsvTable &t
 std::pair<std::string, int> CsvTableHandler::CsvTableCalculator::parseOperand(const std::string &operand) {
     std::string operandColumn;
     std::string operandRow;
-    int operandRowPos = -1;
+    int operandRowPos = 0;
     for (int i = 0; i < operand.size(); ++i) {
         if (operand[i] == '0' || operand[i] == '1' || operand[i] == '2'
             || operand[i] == '3' || operand[i] == '4' || operand[i] == '5'

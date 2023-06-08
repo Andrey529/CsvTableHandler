@@ -13,11 +13,6 @@ int main(int argc, char **argv) {
     try {
         csvTable.readTable(argv[1]);
 
-        std::cout << csvTable.getElem("A", 2) << std::endl;
-        std::cout << csvTable.getElem("B", 2) << std::endl;
-        std::cout << csvTable.getElem("B", 30) << std::endl;
-        std::cout << csvTable.getElem("Cell", 30) << std::endl;
-
         CsvTableHandler::CsvTableCalculator::calculate(csvTable);
 
         std::cout << csvTable;

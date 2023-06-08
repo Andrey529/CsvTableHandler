@@ -5,6 +5,9 @@
 #include <vector>
 #include <unordered_map>
 #include <fstream>
+#include <algorithm>
+#include <iostream>
+
 
 namespace CsvTableHandler {
     class CsvTable {

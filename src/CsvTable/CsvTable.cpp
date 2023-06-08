@@ -1,4 +1,3 @@
-#include <iostream>
 #include "CsvTable.h"
 
 CsvTableHandler::CsvTable::CsvTable() = default;
