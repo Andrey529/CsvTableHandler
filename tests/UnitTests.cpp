@@ -2,6 +2,20 @@
 
 #include "../src/CsvTable/CsvTable.h"
 #include "../src/CsvTable/CsvTable.cpp"
+#include "../src/CsvTableCalculator/CsvTableCalculator.h"
+#include "../src/CsvTableCalculator/CsvTableCalculator.cpp"
+
+TEST(CsvTable, readTable_1) {
+    CsvTableHandler::CsvTable csvTable;
+    std::string fileName("../../tests/files/test_1.csv");
+    GTEST_ASSERT_EQ(csvTable.readTable(fileName), true);
+    fileName = "../../tests/files/test_2.csv";
+    GTEST_ASSERT_EQ(csvTable.readTable(fileName), true);
+    fileName = "../../tests/files/test_3.csv";
+    GTEST_ASSERT_EQ(csvTable.readTable(fileName), true);
+    fileName = "../../tests/files/test_4_error_table.csv";
+    GTEST_ASSERT_EQ(csvTable.readTable(fileName), false);
+}
 
 TEST(CsvTable, getElem_1) {
     CsvTableHandler::CsvTable csvTable;
@@ -53,9 +67,9 @@ TEST(CsvTable, getElem_3) {
     GTEST_ASSERT_EQ(csvTable.getElem("B", 2), "=B3*9");
     GTEST_ASSERT_EQ(csvTable.getElem("B", 3), "8");
 
-    GTEST_ASSERT_EQ(csvTable.getElem("C", 1), "3");
+    GTEST_ASSERT_EQ(csvTable.getElem("C", 1), "=4/2");
     GTEST_ASSERT_EQ(csvTable.getElem("C", 2), "6");
-    GTEST_ASSERT_EQ(csvTable.getElem("C", 3), "=2-C1");
+    GTEST_ASSERT_EQ(csvTable.getElem("C", 3), "=2-C2");
 }
 
 TEST(CsvTable, getElem_4_out_of_range) {
@@ -125,6 +139,77 @@ TEST(CsvTable, setElem_3_empty_table) {
     GTEST_ASSERT_EQ(csvTable.setElem("A", 4, "123"), false);
     GTEST_ASSERT_EQ(csvTable.setElem("A", 10, "123"), false);
     GTEST_ASSERT_EQ(csvTable.setElem("A", 100, "123"), false);
+}
+
+
+TEST(CsvTableCalculator, calculate_1) {
+    CsvTableHandler::CsvTable csvTable;
+
+    std::string fileName("../../tests/files/test_1.csv");
+    csvTable.readTable(fileName);
+    GTEST_ASSERT_EQ(CsvTableHandler::CsvTableCalculator::calculate(csvTable), true);
+
+    GTEST_ASSERT_EQ(csvTable.getElem("A", 1), "1");
+    GTEST_ASSERT_EQ(csvTable.getElem("A", 2), "2");
+    GTEST_ASSERT_EQ(csvTable.getElem("A", 30), "0");
+
+    GTEST_ASSERT_EQ(csvTable.getElem("B", 1), "0");
+    GTEST_ASSERT_EQ(csvTable.getElem("B", 2), "6");
+    GTEST_ASSERT_EQ(csvTable.getElem("B", 30), "1");
+
+    GTEST_ASSERT_EQ(csvTable.getElem("Cell", 1), "1");
+    GTEST_ASSERT_EQ(csvTable.getElem("Cell", 2), "0");
+    GTEST_ASSERT_EQ(csvTable.getElem("Cell", 30), "5");
+}
+
+TEST(CsvTableCalculator, calculate_2) {
+    CsvTableHandler::CsvTable csvTable;
+
+    std::string fileName("../../tests/files/test_2.csv");
+    csvTable.readTable(fileName);
+    GTEST_ASSERT_EQ(CsvTableHandler::CsvTableCalculator::calculate(csvTable), true);
+
+    GTEST_ASSERT_EQ(csvTable.getElem("A", 1), "1");
+    GTEST_ASSERT_EQ(csvTable.getElem("A", 2), "4");
+    GTEST_ASSERT_EQ(csvTable.getElem("A", 3), "7");
+
+    GTEST_ASSERT_EQ(csvTable.getElem("B", 1), "2");
+    GTEST_ASSERT_EQ(csvTable.getElem("B", 2), "5");
+    GTEST_ASSERT_EQ(csvTable.getElem("B", 3), "8");
+
+    GTEST_ASSERT_EQ(csvTable.getElem("C", 1), "3");
+    GTEST_ASSERT_EQ(csvTable.getElem("C", 2), "6");
+    GTEST_ASSERT_EQ(csvTable.getElem("C", 3), "9");
+}
+
+TEST(CsvTableCalculator, calculate_3) {
+    CsvTableHandler::CsvTable csvTable;
+
+    std::string fileName("../../tests/files/test_3.csv");
+    csvTable.readTable(fileName);
+    GTEST_ASSERT_EQ(CsvTableHandler::CsvTableCalculator::calculate(csvTable), true);
+
+    GTEST_ASSERT_EQ(csvTable.getElem("A", 1), "13");
+    GTEST_ASSERT_EQ(csvTable.getElem("A", 2), "4");
+    GTEST_ASSERT_EQ(csvTable.getElem("A", 3), "7");
+
+    GTEST_ASSERT_EQ(csvTable.getElem("B", 1), "2");
+    GTEST_ASSERT_EQ(csvTable.getElem("B", 2), "72");
+    GTEST_ASSERT_EQ(csvTable.getElem("B", 3), "8");
+
+    GTEST_ASSERT_EQ(csvTable.getElem("C", 1), "2");
+    GTEST_ASSERT_EQ(csvTable.getElem("C", 2), "6");
+    GTEST_ASSERT_EQ(csvTable.getElem("C", 3), "-4");
+}
+
+TEST(CsvTableCalculator, calculate_5) {
+    CsvTableHandler::CsvTable csvTable;
+
+    std::string fileName("../../tests/files/test_5_error_column_and_row_index.csv");
+    csvTable.readTable(fileName);
+    GTEST_ASSERT_EQ(CsvTableHandler::CsvTableCalculator::calculate(csvTable), false);
+
+
 }
 
 

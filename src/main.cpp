@@ -11,11 +11,16 @@ int main(int argc, char **argv) {
     CsvTableHandler::CsvTable csvTable;
 
     try {
-        csvTable.readTable(argv[1]);
+        if (!csvTable.readTable(argv[1])) {
+            std::cout << "Failed to read the table from the file, it has invalid parameters\n";
+        } else {
+            if (CsvTableHandler::CsvTableCalculator::calculate(csvTable)) {
+                std::cout << csvTable;
+            } else {
+                std::cout << "There was a mistake, the table could not be calculated\n";
+            }
+        }
 
-        CsvTableHandler::CsvTableCalculator::calculate(csvTable);
-
-        std::cout << csvTable;
     } catch (const std::exception &exception) {
         std::cerr << exception.what() << std::endl;
     }

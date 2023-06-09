@@ -24,6 +24,7 @@ bool CsvTableHandler::CsvTableCalculator::calculate(CsvTableHandler::CsvTable &t
         int columnIndex = item.first.second;
         std::string elem = item.second;
 
+        // parse operator
         char mathOperator;
         if (elem.find('+') != std::string::npos) {
             mathOperator = '+';
@@ -35,6 +36,7 @@ bool CsvTableHandler::CsvTableCalculator::calculate(CsvTableHandler::CsvTable &t
             mathOperator = '/';
         }
 
+        // parse operands
         auto mathOperatorPosition = elem.find(mathOperator);
         std::string firstOperand = elem.substr(1, mathOperatorPosition - 1);
         std::string secondOperand = elem.substr(mathOperatorPosition + 1);
@@ -47,33 +49,40 @@ bool CsvTableHandler::CsvTableCalculator::calculate(CsvTableHandler::CsvTable &t
         std::string secondOperandColumn = parsedSecondOperand.first;
         int secondOperandRow = parsedSecondOperand.second;
 
-        int firstOperandValue, secondOperandValue;
+        std::string firstOperandValue, secondOperandValue;
 
+        // get operands values
         if (!firstOperandColumn.empty() && !secondOperandColumn.empty()) {
-            firstOperandValue = std::stoi(table.getElem(firstOperandColumn, firstOperandRow));
-            secondOperandValue = std::stoi(table.getElem(secondOperandColumn, secondOperandRow));
+            firstOperandValue = table.getElem(firstOperandColumn, firstOperandRow);
+            secondOperandValue = table.getElem(secondOperandColumn, secondOperandRow);
         } else if (!firstOperandColumn.empty()) {
-            firstOperandValue = std::stoi(table.getElem(firstOperandColumn, firstOperandRow));
-            secondOperandValue = secondOperandRow;
+            firstOperandValue = table.getElem(firstOperandColumn, firstOperandRow);
+            secondOperandValue = std::to_string(secondOperandRow);
         } else if (!secondOperandColumn.empty()) {
-            firstOperandValue = firstOperandRow;
-            secondOperandValue = std::stoi(table.getElem(secondOperandColumn, secondOperandRow));
+            firstOperandValue = std::to_string(firstOperandRow);
+            secondOperandValue = table.getElem(secondOperandColumn, secondOperandRow);
         } else {
-            firstOperandValue = firstOperandRow;
-            secondOperandValue = secondOperandRow;
+            firstOperandValue = std::to_string(firstOperandRow);
+            secondOperandValue = std::to_string(secondOperandRow);
         }
 
+        if (firstOperandValue.empty() || secondOperandValue.empty()) {
+            std::cout << "Unknown cell during table calculation\n";
+            return false;
+        }
+
+        // calculate result value
         int result;
         if (mathOperator == '+') {
-            result = firstOperandValue + secondOperandValue;
+            result = std::stoi(firstOperandValue) + std::stoi(secondOperandValue);
         } else if (mathOperator == '-') {
-            result = firstOperandValue - secondOperandValue;
+            result = std::stoi(firstOperandValue) - std::stoi(secondOperandValue);
         } else if (mathOperator == '*') {
-            result = firstOperandValue * secondOperandValue;
-        } else if (secondOperandValue == 0) {
+            result = std::stoi(firstOperandValue) * std::stoi(secondOperandValue);
+        } else if (std::stoi(secondOperandValue) == 0) {
             return false;
         } else {
-            result = firstOperandValue / secondOperandValue;
+            result = std::stoi(firstOperandValue) / std::stoi(secondOperandValue);
         }
 
         int rowHeadValue = -1;
@@ -92,10 +101,9 @@ bool CsvTableHandler::CsvTableCalculator::calculate(CsvTableHandler::CsvTable &t
             }
         }
 
+        // set result value
         table.setElem(columnHeadValue, rowHeadValue, std::to_string(result));
-
     }
-
 
     return true;
 }

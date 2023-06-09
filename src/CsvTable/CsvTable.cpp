@@ -4,7 +4,11 @@ CsvTableHandler::CsvTable::CsvTable() = default;
 
 CsvTableHandler::CsvTable::~CsvTable() = default;
 
-void CsvTableHandler::CsvTable::readTable(const std::string &fileName) {
+bool CsvTableHandler::CsvTable::readTable(const std::string &fileName) {
+    rowHeaders_.clear();
+    columnHeaders_.clear();
+    data_.clear();
+
     fileName_ = fileName;
 
     std::ifstream inputFile(fileName_);
@@ -14,9 +18,11 @@ void CsvTableHandler::CsvTable::readTable(const std::string &fileName) {
         readFirstString(inputFile);
 
         // read other lines with data
-        readDataStrings(inputFile);
+        bool result = readDataStrings(inputFile);
 
         inputFile.close();
+
+        return result;
     } else {
         throw std::runtime_error("Failed to open input data file");
     }
@@ -41,7 +47,7 @@ void CsvTableHandler::CsvTable::readFirstString(std::ifstream &inputFile) {
 
 }
 
-void CsvTableHandler::CsvTable::readDataStrings(std::ifstream &inputFile) {
+bool CsvTableHandler::CsvTable::readDataStrings(std::ifstream &inputFile) {
     std::string str;
     int rowIndex = 0;
     while (std::getline(inputFile, str)) {
@@ -63,9 +69,14 @@ void CsvTableHandler::CsvTable::readDataStrings(std::ifstream &inputFile) {
         }
         data_[rowIndex].emplace_back(elemRow);
 
+        if (data_[rowIndex].size() != columnHeaders_.size()) {
+            return false;
+        }
+
         ++rowIndex;
         str.clear();
     }
+    return true;
 }
 
 std::string CsvTableHandler::CsvTable::getElem(const std::string &column, const int &row) const {

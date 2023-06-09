@@ -18,11 +18,11 @@ namespace CsvTableHandler {
         std::vector<std::vector<std::string>> data_;
 
         void readFirstString(std::ifstream &inputFile);
-        void readDataStrings(std::ifstream &inputFile);
+        bool readDataStrings(std::ifstream &inputFile);
     public:
         CsvTable();
         ~CsvTable();
-        void readTable(const std::string &fileName);
+        bool readTable(const std::string &fileName);
         std::string getElem(const std::string &column, const int &row) const;
         bool setElem(const std::string &column, const int &row, const std::string &value);
 
